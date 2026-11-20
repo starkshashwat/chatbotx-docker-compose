@@ -116,6 +116,7 @@ services:
   filesystem-init:
     <<: *network
     image: rustfs/rc:v0.1.22
+    restart: "no"
     depends_on:
       filesystem:
         condition: service_healthy
