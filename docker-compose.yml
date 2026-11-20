@@ -13,13 +13,13 @@ x-depends-datastores: &depends-datastores
 
 x-environment: &common-vars
   BETTER_AUTH_SECRET: VLu1KcS63DTTnZU3Dh/ykI9Ld26YQXy/1IMJdZf/kHI=
-  BETTER_AUTH_URL: http://localhost:3123
+  BETTER_AUTH_URL: https://chatbox.mechanismofya.com
   DATABASE_URL: postgresql://chatbotx:secretkey@postgres:5432/chatbotx?schema:public
   ENCRYPTION_KEY: 51112f8099c4597dff033d2d94c2f4bde95802d3027ecd0944b7647a8861e53e
   JAVASCRIPT_EXECUTOR_URL: http://javascript-executor:3210
   JAVASCRIPT_EXECUTOR_TOKEN: ${JAVASCRIPT_EXECUTOR_TOKEN:-change-me-in-production-at-least-32-chars}
-  NEXT_PUBLIC_ASSET_URL: http://localhost:9000/chatbotx/
-  NEXT_PUBLIC_BUILDER_URL: http://localhost:3123
+  NEXT_PUBLIC_ASSET_URL: https://assets.mechanismofya.com/chatbotx/
+  NEXT_PUBLIC_BUILDER_URL: https://chatbox.mechanismofya.com
   NEXT_PUBLIC_EDITION: community
   NODE_OPTIONS: "--max_old_space_size=4096"
   REALTIME_API_KEY: secretkey
@@ -29,12 +29,12 @@ x-environment: &common-vars
   RUN_DB_SEED: true
   S3_ACCESS_KEY_ID: chatbotx
   S3_BUCKET: chatbotx
-  S3_ENPOINT: http://localhost:9000
+  S3_ENPOINT: http://filesystem:9000
   S3_REGION: us-west-2
   S3_SECRET_ACCESS_KEY: secretkey
   SCHEDULER_BUCKET_RANGE: 0-255
   SMTP_FROM: no-reply@localhost
-  SMTP_SERVER: smtp://username:password@localhost:1025
+  SMTP_SERVER: smtp://username:password@mailhog:1025
 
 x-worker: &worker
   <<: [ *network, *depends-datastores ]
@@ -177,7 +177,6 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  # BullMQ Worker
   worker:
     <<: [ *worker ]
     networks:
@@ -199,8 +198,6 @@ services:
       retries: 3
       start_period: 20s
 
-  # Sandboxed runtime for user-authored JavaScript flow steps.
-  # Isolated on an internal-only network with no host-published port.
   javascript-executor:
     image: ghcr.io/chatbotxio/chatbotx-javascript-executor:latest
     platform: linux/amd64
