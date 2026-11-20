@@ -128,6 +128,7 @@ services:
     <<: *network
     image: rustfs/rc:v0.1.22
     restart: "no"
+    exclude_from_hc: true
     depends_on:
       filesystem:
         condition: service_healthy
